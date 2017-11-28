@@ -1,0 +1,84 @@
+---2
+title: '538'
+author : "Rian Fantozzi"
+date : "\today"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+The orginal visualization that we are trying to replicate is as follows:
+```{r fig.width=1, fig.height=10,echo=FALSE}
+library(png)
+library(grid)
+#img <- readPNG("C:\Users\rianf\downloads\silver-world-cup-food-matrix-a.png")
+ #grid.raster(img)
+```
+
+
+```{r}
+library(fivethirtyeight)
+library(tidyverse)
+head(food_world_cup)
+fwc = food_world_cup
+```
+
+Part 1) 
+```{r}
+ggplot(fwc, aes(knowledge))+geom_bar()+theme_classic()+labs(x="Knowledge of Food", y="Number of Respondents", title = "Knowledge of Subject Matter")
+```
+Part 2) Knowledge vs Interest
+```{r}
+ggplot(fwc, aes(knowledge,fill=interest))+theme_classic()+geom_bar()+labs(x="Knowledge of Food", y="Number of Respondents", title = "Knowledge and Interest in Subject Matter")
+```
+Part 3)
+```{r}
+ggplot(fwc, aes(knowledge,fill=interest))+theme_classic()+geom_bar()+labs(x="Knowledge of Food", y="Number of Respondents", title = "Knowledge and Interest in Subject Matter")+facet_grid(.~education)
+```
+# Group A: Mexico, Brazil, Cameroon, Ireland, Croatia
+```{r}
+GroupA = data_frame(mexico=c(fwc$mexico), brazil=c(fwc$brazil), cameroon=c(fwc$cameroon), ireland=c(fwc$ireland), croatia = c(fwc$croatia)) #This puts all the of the responses from the data table into a data frame
+mex5=sum(GroupA$mexico == "5", na.rm = TRUE)
+mex4=sum(GroupA$mexico == "4", na.rm = TRUE)
+mex3=sum(GroupA$mexico == "3", na.rm = TRUE)
+mex2=sum(GroupA$mexico == "2", na.rm = TRUE)
+mex1=sum(GroupA$mexico == "1", na.rm = TRUE)
+mexna=sum(GroupA$mexico == "N/A",na.rm=TRUE) # Count Non Response
+bra5=sum(GroupA$brazil == "5", na.rm = TRUE)
+bra4=sum(GroupA$brazil == "4", na.rm = TRUE)
+bra3=sum(GroupA$brazil == "3", na.rm = TRUE)
+bra2=sum(GroupA$brazil == "2", na.rm = TRUE)
+bra1=sum(GroupA$brazil == "1", na.rm = TRUE)
+brana=sum(GroupA$brazil == "N/A",na.rm=TRUE)
+cam5=sum(GroupA$cameroon == "5", na.rm = TRUE)
+cam4=sum(GroupA$cameroon == "4", na.rm = TRUE)
+cam3=sum(GroupA$cameroon == "3", na.rm = TRUE)
+cam2=sum(GroupA$cameroon == "2", na.rm = TRUE)
+cam1=sum(GroupA$cameroon == "1", na.rm = TRUE)
+camna=sum(GroupA$cameroon == "N/A",na.rm=TRUE)
+ire5=sum(GroupA$ireland == "5", na.rm = TRUE)
+ire4=sum(GroupA$ireland == "4", na.rm = TRUE)
+ire3=sum(GroupA$ireland == "3", na.rm = TRUE)
+ire2=sum(GroupA$ireland == "2", na.rm = TRUE)
+ire1=sum(GroupA$ireland == "1", na.rm = TRUE)
+irena=sum(GroupA$ireland == "N/A",na.rm=TRUE)
+cro5=sum(GroupA$croatia == "5", na.rm = TRUE)
+cro4=sum(GroupA$croatia == "4", na.rm = TRUE)
+cro3=sum(GroupA$croatia == "3", na.rm = TRUE)
+cro2=sum(GroupA$croatia == "2", na.rm = TRUE)
+cro1=sum(GroupA$croatia == "1", na.rm = TRUE)
+crona=sum(GroupA$croatia == "N/A",na.rm=TRUE)
+mexagg = mex5+mex4+mex3+mex2+mex1 #Calculate aggregate score
+braagg = bra1+bra4+bra3+bra2+bra1 
+camagg = cam5+cam4+cam3+cam2+cam1
+ireagg = ire5+ire4+ire3+ire2+ire1
+croagg = cro5+cro4+cro3+cro2+cro1
+mextot = mexagg + mexna
+bratot = braagg + brana
+crotot = croagg + crona
+iretot = ireagg + irena
+camtot = camagg + camna
+allagg = c(mexagg,camagg,ireagg,croagg,braagg)  #This is really ugly code but I needed to meet a deadline and will clean it up in the future if I ever return to this project. May Knuth and Booch forgive me.
+```
+The graphic we are trying to create was based off of wins and losses, the methodology for determining this is unclear from the article. For our purposes we are going to determine that if a country wins more overall points than another, it wins the faceoff. However, to make up for 
